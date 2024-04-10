@@ -1,30 +1,38 @@
 const express = require('express');
-const cors = require('cors');
-
+const bodyParser = require('body-parser');
 const app = express();
-const port = 3000; // Choose any port you like
+const PORT = 3000;
 
-// Use CORS middleware
-app.use(cors());
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
 
-app.use(express.json());
+// POST route to handle incoming text data
+app.post('/create-lead', (req, res) => {
+    const text = req.body.text;
 
-app.post('/createLead', (req, res) => {
-    const { name, phone, address } = req.body;
-    const lead = {
-        name: "Arjun",
-        phone: "123321",
-        address: "Pune",
-        status: 'created'
+    // Function to create lead info based on the text
+    const createLeadInfo = (text) => {
+        if (text.toLowerCase().includes("create a lead for arjun")) {
+            const leadData = {
+                first_name: "Arjun",
+                last_name: "Prakash",
+                company: "c2crm",
+                designation: "Manager"
+            };
+            return leadData;
+        } else {
+            return { error: "No matching lead creation text found." };
+        }
     };
-    const response = {
-        success: true,
-        message: 'Lead created successfully',
-        lead
-    };
-    res.json(response);
+
+    // Call function to create lead info
+    const leadInfo = createLeadInfo(text);
+
+    // Return the JSON data
+    res.json(leadInfo);
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

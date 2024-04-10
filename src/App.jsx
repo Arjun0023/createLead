@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 function LeadCreator() {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
   const [response, setResponse] = useState(null);
 
   const handleCreateLead = async () => {
@@ -13,7 +11,7 @@ function LeadCreator() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, phone, address })
+        body: JSON.stringify({ name })
       });
       const data = await response.json();
       setResponse(data);
@@ -29,18 +27,6 @@ function LeadCreator() {
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
       />
       <button onClick={handleCreateLead}>Create Lead</button>
 
