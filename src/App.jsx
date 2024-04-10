@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 
-function LeadCreator() {
-  const [name, setName] = useState('');
+function App() {
+  const [inputText, setInputText] = useState('');
   const [response, setResponse] = useState(null);
 
-  const handleCreateLead = async () => {
+  const handleInputChange = (event) => {
+    setInputText(event.target.value);
+  };
+
+  const handleEnter = (event) => {
+    if (event.key === 'Enter') {
+      createLead();
+    }
+  };
+
+  const createLead = async () => {
     try {
       const response = await fetch('http://localhost:3000/createLead', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name })
+        body: JSON.stringify({ text: inputText })
       });
       const data = await response.json();
       setResponse(data);
@@ -24,11 +34,12 @@ function LeadCreator() {
     <div>
       <input
         type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        placeholder="Enter text..."
+        value={inputText}
+        onChange={handleInputChange}
+        onKeyPress={handleEnter}
       />
-      <button onClick={handleCreateLead}>Create Lead</button>
+      <button onClick={createLead}>Create Lead</button>
 
       {response && (
         <div>
@@ -40,4 +51,4 @@ function LeadCreator() {
   );
 }
 
-export default LeadCreator;
+export default App;

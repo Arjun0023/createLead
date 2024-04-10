@@ -1,38 +1,42 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
-const PORT = 3000;
+const cors = require('cors');
 
-// Middleware to parse JSON bodies
+const app = express();
+const port = 3000; // Choose any port you like
+
+// Use CORS middleware
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// POST route to handle incoming text data
-app.post('/create-lead', (req, res) => {
-    const text = req.body.text;
+app.post('/createLead', (req, res) => {
+    const { text } = req.body;
 
-    // Function to create lead info based on the text
-    const createLeadInfo = (text) => {
-        if (text.toLowerCase().includes("create a lead for arjun")) {
-            const leadData = {
-                first_name: "Arjun",
-                last_name: "Prakash",
-                company: "c2crm",
-                designation: "Manager"
-            };
-            return leadData;
-        } else {
-            return { error: "No matching lead creation text found." };
-        }
-    };
+    // Parse the input text to extract relevant information
+    const nameRegex = /create a lead for (\w+)/i;
+    const match = text.match(nameRegex);
 
-    // Call function to create lead info
-    const leadInfo = createLeadInfo(text);
-
-    // Return the JSON data
-    res.json(leadInfo);
+    if (match && match[1]) {
+        const leadName = match[1];
+        const lead = {
+            name: leadName,
+            phone: "123321",
+            address: "Pune",
+            status: 'created'
+        };
+        const response = {
+            success: true,
+            message: 'Lead created successfully',
+            lead
+        };
+        res.json(response);
+    } else {
+        // If the input text doesn't match the expected format
+        res.status(400).json({ success: false, message: 'Invalid input text' });
+    }
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
