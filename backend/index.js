@@ -3,8 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = 3000; 
-
+const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,25 +14,18 @@ app.post('/createLead', (req, res) => {
     const nameRegex = /create a lead for (\w+)/i;
     const match = text.match(nameRegex);
 
-    if (match && match[1]) {
-        const leadName = match[1];
+    if (match && match[1].toLowerCase() === 'arjun') {
         const lead = {
-            name: leadName,
-            phone: "123321",
-            address: "Pune",
-            status: 'created'
+            email: "arjunpawar0023@gmail.com",
+            password: "!@#123letsgoo",
+            companyName: "asd",
+            lastName: "saasd"
         };
-        const response = {
-            success: true,
-            message: 'Lead created successfully',
-            lead
-        };
-        res.json(response);
+        res.json(lead); // Return the lead object directly
     } else {
-        res.status(400).json({ success: false, message: 'Invalid input text' });
+        res.status(400).json({ success: false, message: 'Invalid input text or lead not found' });
     }
 });
-
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
